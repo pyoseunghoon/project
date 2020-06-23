@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Safe_guard</string>
+    <string name="app_name">WassupDog</string>
+    <!-- Bottom Navigation View -->
+    <string name="search">동행찾기</string>
+    <string name="chat">대화목록</string>
+    <string name="dog_signup">반려견 등록</string>
+    <string name="account_info">계정정보</string>
 </resources>

@@ -28,12 +28,6 @@
             android:text="반려동물 등록"
             android:textSize="36sp" />
 
-        <Button
-            android:id="@+id/register_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="62dp"
-            android:layout_weight="1"
-            android:text="등록" />
     </LinearLayout>
 
     <LinearLayout
@@ -49,22 +43,20 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/petName_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="펫 이름"
-            android:inputType="textPersonName"
-            android:text="petName_et" />
+            android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/petKind_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="품종"
-            android:inputType="textPersonName"
-            android:text="petKind_et" />
+            android:inputType="textPersonName" />
 
         <RadioGroup
             android:id="@+id/sex_radio_group"
@@ -166,6 +158,34 @@
                 android:text="하" />
         </RadioGroup>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+            <ImageView
+                android:id="@+id/addphoto_img"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp" />
+
+            <Button
+                android:id="@+id/upload_img"
+                android:layout_marginLeft="50dp"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="185dp"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:text="이미지 업로드" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="18dp"
+            android:text="등록완료" />
     </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

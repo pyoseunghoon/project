@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:enabled="true"
+        android:title="@string/search"/>
+    <item
+        android:id="@+id/action_chat"
+        android:icon="@drawable/ic_chat_black"
+        android:enabled="true"
+        android:title="@string/chat"/>
+    <item
+        android:id="@+id/action_dog"
+        android:icon="@drawable/ic_add_a_photo"
+        android:enabled="true"
+        android:title="@string/dog_signup"/>
+    <item
+        android:id="@+id/action_my_info"
+        android:icon="@drawable/ic_account"
+        android:enabled="true"
+        android:title="@string/account_info"/>
+
+
+</menu>

@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
 
         sign_Up.setOnClickListener {
             startActivity(Intent(this, Register01Activity::class.java))
-            finish()
+//            finish()
         }
 
         loginBtn.setOnClickListener {
@@ -127,21 +127,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(currentUser: FirebaseUser?) {
 
-        if (currentUser != null) {
-            if(currentUser.isEmailVerified) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }else{
-                Toast.makeText(
-                    baseContext, "이메일 인증이 필요합니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        if (currentUser == null) {
+            //
         } else {
-//            Toast.makeText(
-//                baseContext, "로그인이 실패했습니다.",
-//                Toast.LENGTH_SHORT
-//            ).show()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }
