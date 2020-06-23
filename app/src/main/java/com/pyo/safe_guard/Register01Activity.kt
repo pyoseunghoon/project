@@ -1,28 +1,15 @@
 package com.pyo.safe_guard
 
-import android.app.Activity
+
 import android.content.Intent
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
+import com.pyo.safe_guard.model.UserDto
 import kotlinx.android.synthetic.main.activity_register01.*
-import kotlinx.android.synthetic.main.activity_reigiser_acitivity.*
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class Register01Activity : AppCompatActivity() {
@@ -34,7 +21,7 @@ class Register01Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register01)
         auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance()
 
         btn_register.setOnClickListener {
             signUpUser()
@@ -61,22 +48,46 @@ class Register01Activity : AppCompatActivity() {
             return
         }
 
-        auth.createUserWithEmailAndPassword(register_em.text.toString(), register_pw.text.toString())
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    user?.sendEmailVerification()
-                        ?.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Toast.makeText(this, "회원가입이 완료됐습니다.", Toast.LENGTH_LONG).show()
-                                startActivity(Intent(this, Register02Activity::class.java))
-//                                finish()
-                            }
-                        }
-                } else {
-                    Toast.makeText(baseContext, "회원인증에 실패했습니다. 다시 시도해주세요.",
-                        Toast.LENGTH_SHORT).show()
-                }
-            }
+        if (check_pw.text.toString().isEmpty()) {
+            register_pw.error = "패스워드 확인을 입력해주세요."
+            register_pw.requestFocus()
+            return
         }
+
+        if(register_pw.text.toString() != check_pw.text.toString()) {
+            Toast.makeText(this, "패스워드와 패스워드 확인이 일치하지 않습니다.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        auth.createUserWithEmailAndPassword(register_em.text.toString(), register_pw.text.toString())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        // DB에 회원정보 저장
+                        var userDto = UserDto()
+
+                        userDto.email = register_em.text.toString()
+                        userDto.password = register_pw.text.toString()
+                        userDto.name = register_name.text.toString()
+                        userDto.timestamp = System.currentTimeMillis()
+                        userDto.uid = auth.currentUser?.uid
+
+
+                        firestore.collection("users").document().set(userDto)
+
+                        // 로그인
+                        Toast.makeText(this, "회원가입이 완료됐습니다.", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+
+                    } else {
+                        // 에러 메세지 출력
+                        Toast.makeText(baseContext, "회원인증에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+                }
     }
+
+}
+
+
+
