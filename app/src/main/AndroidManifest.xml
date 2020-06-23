@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -18,12 +19,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD4aUC8DSSLY90CPM4ctz5DBqzhupz5RcE" />
+
+
+        <activity android:name=".GalleryActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Register02Activity" />
         <activity android:name=".Register01Activity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".GalleryActivity">
+        <activity android:name=".googlemap">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

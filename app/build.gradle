@@ -44,4 +44,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-commons:0.10.2"
+    // Anko Commons 라이브러리를 추가합니다.
+    implementation "org.jetbrains.anko:anko-commons:0.10.2"
+
+    // appcompat-v7용 Anko Commons 라이브러리를 추가합니다.
+    implementation "org.jetbrains.anko:anko-appcompat-v7-commons:0.10.2"
+
+    // support-v4용 Anko Commons 라이브러리를 추가합니다.
+    implementation "org.jetbrains.anko:anko-support-v4-commons:0.10.2"
 }
