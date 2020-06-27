@@ -1,6 +1,8 @@
 package com.pyo.safe_guard.navigation
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,9 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pyo.safe_guard.R
-import com.pyo.safe_guard.model.ContentDTO
+import com.pyo.safe_guard.navigation.model.AlarmDTO
+import com.pyo.safe_guard.navigation.model.ContentDTO
+import com.pyo.safe_guard.navigation.util.FcmPush
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
@@ -78,81 +82,79 @@ class HomeFragment : Fragment() {
 
             //Explain of content
             viewholder.detailviewitem_explain_textview.text = contentDTOs!![p1].explain
-        }
-    }
-}
-//            //likes
-//            viewholder.detailviewitem_favoritecounter_textview.text = "Likes " + contentDTOs!![p1].favoriteCount
+
+            //likes
+            viewholder.detailviewitem_favoritecounter_textview.text = "Likes " + contentDTOs!![p1].favoriteCount
 
             //This code is when the button is clicked
-//            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
-//                favoriteEvent(p1)
-//            }
+            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
+                favoriteEvent(p1)
+            }
 
 //            //This code is when the page is loaded
-//            if(contentDTOs!![p1].favorites.containsKey(uid)){
-//                //This is like status
-//                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
-//
-//            }else{
-//                //This is unlike status
-//                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
-//            }
+            if(contentDTOs!![p1].favorites.containsKey(uid)){
+                //This is like status
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+
+            }else{
+                //This is unlike status
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
 
             //This code is when the profile image is clicked
-//            viewholder.detailviewitem_profile_image.setOnClickListener {
-////                var fragment = UserFragment()
-////                var bundle = Bundle()
-////                bundle.putString("destinationUid",contentDTOs[p1].uid)
-////                bundle.putString("userId",contentDTOs[p1].userId)
-////                fragment.arguments = bundle
-////                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
-////            }
-////            viewholder.detailviewitem_comment_imageview.setOnClickListener { v ->
-////                var intent = Intent(v.context,CommentActivity::class.java)
-////                intent.putExtra("contentUid",contentUidList[p1])
-////                intent.putExtra("destinationUid",contentDTOs[p1].uid)
-////                startActivity(intent)
-////            }
-////        }
-////        fun favoriteEvent(position : Int){
-////            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
-////            firestore?.runTransaction { transaction ->
-////
-////
-////                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
-////
-////                if(contentDTO!!.favorites.containsKey(uid)){
-////                    //When the button is clicked
-////                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
-////                    contentDTO?.favorites.remove(uid)
-////                }else{
-////                    //When the button is not clicked
-////                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
-////                    contentDTO?.favorites[uid!!] = true
-////                    favoriteAlarm(contentDTOs[position].uid!!)
-////
-////                }
-////                transaction.set(tsDoc,contentDTO)
-////            }
+            viewholder.detailviewitem_profile_image.setOnClickListener {
+                var fragment = AccountFragment()
+                var bundle = Bundle()
+                bundle.putString("destinationUid",contentDTOs[p1].uid)
+                bundle.putString("userId",contentDTOs[p1].userId)
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
+            }
+            viewholder.detailviewitem_comment_imageview.setOnClickListener { v ->
+                var intent = Intent(v.context,CommentActivity::class.java)
+                intent.putExtra("contentUid",contentUidList[p1])
+                intent.putExtra("destinationUid",contentDTOs[p1].uid)
+                startActivity(intent)
+            }
+        }
+        fun favoriteEvent(position : Int){
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction { transaction ->
+
+
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+                if(contentDTO!!.favorites.containsKey(uid)){
+                    //When the button is clicked
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
+                    contentDTO?.favorites.remove(uid)
+                }else{
+                    //When the button is not clicked
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
+                    contentDTO?.favorites[uid!!] = true
+                    favoriteAlarm(contentDTOs[position].uid!!)
+
+                }
+                transaction.set(tsDoc,contentDTO)
+            }
 
 
 
 
 //
-//        }
-//        fun favoriteAlarm(destinationUid : String){
-//            var alarmDTO = AlarmDTO()
-//            alarmDTO.destinationUid = destinationUid
-//            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
-//            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
-//            alarmDTO.kind = 0
-//            alarmDTO.timestamp = System.currentTimeMillis()
-//            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
-//
-//            var message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
-//            FcmPush.instance.sendMessage(destinationUid,"Howlstagram",message)
-//        }
-//
-//    }
-//}
+        }
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+            var message = FirebaseAuth.getInstance()?.currentUser?.email +  getString(R.string.alarm_favorite)
+            FcmPush.instance.sendMessage(destinationUid,"wassupDOG",message)
+        }
+
+    }
+}

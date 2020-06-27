@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pyo.safe_guard.R
-import com.pyo.safe_guard.model.ContentDTO
+import com.pyo.safe_guard.navigation.model.ContentDTO
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
 class SearchFragment : Fragment() {

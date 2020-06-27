@@ -5,5 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="trans">#00000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightGray">#f1f1f1</color>
     <color name="colorDivision">#e0e0e0</color>
+    <color name="colorNavIcon">#1d1d1d</color>
 </resources>

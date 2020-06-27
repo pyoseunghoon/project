@@ -1,20 +1,24 @@
 package com.pyo.safe_guard
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.pyo.safe_guard.navigation.ChatFragment
-import com.pyo.safe_guard.navigation.HomeFragment
-import com.pyo.safe_guard.navigation.AccountFragment
-import com.pyo.safe_guard.navigation.SearchFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import com.pyo.safe_guard.navigation.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -25,6 +29,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
+        setToolbarDefault()
         when(p0.itemId) {
             R.id.action_home -> {
                 var dogFragment = HomeFragment()
@@ -40,7 +45,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 checkPermissions() //권한허용
                 if(ContextCompat.checkSelfPermission(this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-                    startActivity(Intent(this,AddPhotoActivity::class.java))
+                    startActivity(Intent(this,
+                        AddPhotoActivity::class.java))
 
 
                 }
@@ -54,19 +60,33 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
             R.id.action_account -> {
-                var myInfoFragment = AccountFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, myInfoFragment).commit()
+                var userFragment = AccountFragment()
+                var bundle = Bundle()
+                var uid = FirebaseAuth.getInstance().currentUser?.uid
+
+                bundle.putString("destinationUid",uid)
+                userFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().replace(R.id.main_content,userFragment).commit()
                 return true
             }
         }
 
         return false
     }
+    fun setToolbarDefault(){
+        toolbar_username.visibility = View.GONE
+        toolbar_btn_back.visibility = View.GONE
+        toolbar_title_image.visibility = View.VISIBLE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
+
+        //Set default screen
+        bottom_navigation.selectedItemId = R.id.action_home
+
     }
 
     //퍼미션 체크 및 권한 요청 함수
@@ -106,6 +126,23 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         }
                     }
                 }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == AccountFragment.PICK_PROFILE_FROM_ALBUM && resultCode == Activity.RESULT_OK){
+            var imageUri = data?.data
+            var uid = FirebaseAuth.getInstance().currentUser?.uid
+            var storageRef = FirebaseStorage.getInstance().reference.child("userProfileImages").child(uid!!)
+            storageRef.putFile(imageUri!!).continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+                return@continueWithTask storageRef.downloadUrl
+            }.addOnSuccessListener { uri ->
+                var map = HashMap<String, Any>()
+                map["image"] = uri.toString()
+                FirebaseFirestore.getInstance().collection("profileImages").document(uid).set(map)
             }
         }
     }

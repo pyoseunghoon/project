@@ -1,4 +1,4 @@
-package com.pyo.safe_guard
+package com.pyo.safe_guard.navigation
 
 
 import android.app.Activity
@@ -6,14 +6,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.pyo.safe_guard.R
-import com.pyo.safe_guard.model.ContentDTO
+import com.pyo.safe_guard.navigation.model.ContentDTO
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -95,7 +94,7 @@ class AddPhotoActivity : AppCompatActivity() {
             finish()
         }
 
-        /*//Callback method
+        //Callback method
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
                 var contentDTO = ContentDTO()
@@ -121,7 +120,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
                 finish()
             }
-        }*/
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.pyo.safe_guard.model
+package com.pyo.safe_guard.navigation.model
 
 data class UserDto(
     var email: String? = null,

@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.pyo.safe_guard.model.UserDto
+import com.pyo.safe_guard.navigation.model.UserDto
 import kotlinx.android.synthetic.main.activity_register01.*
 
 
